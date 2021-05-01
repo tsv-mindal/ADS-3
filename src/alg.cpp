@@ -10,7 +10,7 @@ int priority(char ch) {
             return 1;
         case '+':
         case '-':
-            return 2; 
+            return 2;
         case '*':
         case '/':
             return 3;
@@ -86,6 +86,6 @@ int eval(std::string pst) {
       }
   }
   result = stackCh2.get();
-  return result;
+  return result
 }
 
