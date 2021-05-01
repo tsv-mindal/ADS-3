@@ -4,18 +4,18 @@
 
 int priority(char ch) {
     switch (ch) {
-    case '(':
-        return 0;
-    case ')':
-        return 1;
-    case '+':
-    case '-':
-        return 2;
-    case '*':
-    case '/':
-        return 3;
-    default:
-        return -1;
+        case '(':
+            return 0;
+        case ')':
+            return 1;
+        case '+':
+        case '-':
+            return 2;
+        case '*':
+        case '/':
+            return 3;
+        default:
+            return -1;
     }
 }
 
@@ -29,7 +29,7 @@ std::string infx2pstfx(std::string inf) {
     }
     else 
       if ((inf[i] == '(') || (priority(inf[i]) > priority(stackCh.get())) || (stackCh.isEmpty())) {
-        stackCh.push(inf[i]);
+          stackCh.push(inf[i]);
         }
     else if (inf[i] == ')') {
       while (!stackCh.isEmpty() && stackCh.get() != '(') {
