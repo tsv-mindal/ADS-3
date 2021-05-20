@@ -26,51 +26,50 @@ std::strung infx2pstfx(std::string inf) {
     char ch = inf[i];
     char top = 0; 
     while (ch) {
-          int pr;
-          pr = pr(ch);
-          if (pr > -1) {
-              if ((pr == 0 || pr > pr(top) ||
-                   stackCh.isEmpty()) && ch != ')') {
-                  if (stackCh.isEmpty())
-                      top = ch;
-                  stackCh.push(ch);
-              } else if (ch == ')') {
-                  while (stackCh.get() != '(') {
-                      pstfx.push_back(stackCh.get());
-                      pstfx.push_back(' ');
-                      stackCh.pop();
-                  }
-                  stackCh.pop();
-                  if (stackCh.isEmpty())
-                      top = 0;
-              } else {
-                  while (!stackCh.isEmpty() &&
-                         pr(stackCh.get()) >= pr) {
-                      pstfx.push_back(stackCh.get());
-                      pstfx.push_back(' ');
-                      stackCh.pop();
-                  }
-                  if (stackCh.isEmpty())
-                      top = ch;
-                  stackCh.push(ch);
-              }
-          } else {
-              pstfx.push_back(ch);
-              pstfx.push_back(' ');
-          }
+        int pr;
+        pr = pr(ch);
+        if (pr > -1) {
+            if ((pr == 0 || pr > pr(top) ||
+                 stackCh.isEmpty()) && ch != ')') {
+                if (stackCh.isEmpty())
+                    top = ch;
+                stackCh.push(ch);
+            } else if (ch == ')') {
+                while (stackCh.get() != '(') {
+                    pstfx.push_back(stackCh.get());
+                    pstfx.push_back(' ');
+                    stackCh.pop();
+                }
+                stackCh.pop();
+                if (stackCh.isEmpty())
+                    top = 0;
+            } else {
+                while (!stackCh.isEmpty() &&
+                       pr(stackCh.get()) >= pr) {
+                    pstfx.push_back(stackCh.get());
+                    pstfx.push_back(' ');
+                    stackCh.pop();
+                }
+                if (stackCh.isEmpty())
+                    top = ch;
+                stackCh.push(ch);
+            }
+        } else {
+            pstfx.push_back(ch);
+            pstfx.push_back(' ');
+        }
+        ch = inf[++i];
+    }
+    while (!stackCh.isEmpty()) {
+        pstfx.push_back(stackCh.get());
+        pstfx.push_back(' ');
+        stackCh.pop();
+    }
+    pstfx.erase(pstfx.end() - 1, pstfx.end());
+    return pstfx;
+}
 
-          ch = inf[++i];
-      }
-      while (!stackCh.isEmpty()) {
-          pstfx.push_back(stackCh.get());
-          pstfx.push_back(' ');
-          stackCh.pop();
-      }
-      pstfx.erase(pstfx.end() - 1, pstfx.end());
-      return pstfx;
-  }
-
-  int calculating(char operate, int num1, int num2) {
+int calculating(char operate, int num1, int num2) {
       switch (operate) {
       case '+':
           return num1 + num2;
