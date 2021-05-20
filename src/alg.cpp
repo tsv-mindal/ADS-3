@@ -24,7 +24,7 @@ std::strung infx2pstfx(std::string inf) {
     TStack <char> stackCh;
     int i = 0;
     char ch = inf[i];
-    char top = 0; 
+    char top = 0;
     while (ch) {
         int pr;
         pr = pr(ch);
