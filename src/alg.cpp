@@ -2,7 +2,7 @@
 #include <string>
 #include "tstack.h"
 
-int pr(char ch) {
+int prior(char ch) {
     switch (ch) {
         case '(':
             return 0;
@@ -27,9 +27,9 @@ std::string infx2pstfx(std::string inf) {
     char top = 0;
     while (ch) {
         int pr;
-        pr = pr(ch);
+        pr = prior(ch);
         if (pr > -1) {
-            if ((pr == 0 || pr > pr(top) ||
+            if ((pr == 0 || pr > prior(top) ||
                  stackCh.isEmpty()) && ch != ')') {
                 if (stackCh.isEmpty())
                     top = ch;
@@ -45,7 +45,7 @@ std::string infx2pstfx(std::string inf) {
                     top = 0;
             } else {
                 while (!stackCh.isEmpty() &&
-                       pr(stackCh.get()) >= pr) {
+                       prior(stackCh.get()) >= pr) {
                     pstfx.push_back(stackCh.get());
                     pstfx.push_back(' ');
                     stackCh.pop();
