@@ -19,7 +19,7 @@ int pr(char ch) {
     }
 }
 
-std::strung infx2pstfx(std::string inf) {
+std::string infx2pstfx(std::string inf) {
     std::string pstfx;
     TStack <char> stackCh;
     int i = 0;
