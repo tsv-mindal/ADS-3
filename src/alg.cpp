@@ -1,124 +1,90 @@
 // Copyright 2021 NNTU-CS
 #include <string>
 #include "tstack.h"
-
-int prior(char ch) {
-    switch (ch) {
-        case '(':
-            return 0;
-        case ')':
-            return 1;
-        case '+':
-            return 2;
-        case '-':
-            return 2;
-        case '*':
-            return 3;
-        case '/':
-            return 3;
-        default:
-            return -1;
-    }
-}
-
-std::string infx2pstfx(std::string inf) {
-    std::string pstfx;
-    TStack <char> stackCh;
-    int i = 0;
-    char ch = inf[i];
-    char top = 0;
-    while (ch) {
-        int pr;
-        pr = prior(ch);
-        if (pr > -1) {
-            if ((pr == 0 || pr > prior(top) ||
-                 stackCh.isEmpty()) && ch != ')') {
-                if (stackCh.isEmpty())
-                    top = ch;
-                stackCh.push(ch);
-            } else if (ch == ')') {
-                while (stackCh.get() != '(') {
-                    pstfx.push_back(stackCh.get());
-                    pstfx.push_back(' ');
-                    stackCh.pop();
-                }
-                stackCh.pop();
-                if (stackCh.isEmpty())
-                    top = 0;
-            } else {
-                while (!stackCh.isEmpty() &&
-                       prior(stackCh.get()) >= pr) {
-                    pstfx.push_back(stackCh.get());
-                    pstfx.push_back(' ');
-                    stackCh.pop();
-                }
-                if (stackCh.isEmpty())
-                    top = ch;
-                stackCh.push(ch);
-            }
-        } else {
-            pstfx.push_back(ch);
-            pstfx.push_back(' ');
-        }
-        ch = inf[++i];
-    }
-    while (!stackCh.isEmpty()) {
-        pstfx.push_back(stackCh.get());
-        pstfx.push_back(' ');
-        stackCh.pop();
-    }
-    pstfx.erase(pstfx.end() - 1, pstfx.end());
-    return pstfx;
-}
-
-int calculating(char operate, int num1, int num2) {
-      switch (operate) {
+int p(char count) {
+    switch (count) {
+      case '(':
+          return 0;
+      case ')':
+          return 1;
       case '+':
-          return num1 + num2;
-          break;
       case '-':
-          return num1 - num2;
-          break;
+          return 2;
       case '*':
-          return num1 * num2;
-          break;
       case '/':
-          return num1 / num2;
-          break;
-      }
+          return 3;
+      default:
+          return -1;
+    }
+}
+std::string infx2pstfx(std::string inf) {
+    TStack<char> stack;
+    std::string r;
+
+    for (int i = 0; i < inf.length(); i++) {
+        if ((inf[i] >= '0') && (inf[i] <= '9')) {
+            r += inf[i];
+            r += ' ';
+        } else if (inf[i] == '(') {
+            stack.push(inf[i]);
+        } else if (p(inf[i]) > p(stack.get()) || stack.isEmpty()) {
+            stack.push(inf[i]);
+        } else if (inf[i] == ')') {
+            while (!stack.isEmpty() && stack.get() != '(') {
+                r += stack.get();
+                r += ' ';
+                stack.pop();
+            }
+
+            if (stack.get() == '(') {
+               stack.pop();
+            }
+        } else {
+            while (!stack.isEmpty() && p(stack.get()) >= p(inf[i])) {
+                r += stack.get();
+                r += ' ';
+                stack.pop();
+            }
+
+            stack.push(inf[i]);
+        }
+    }
+
+    while (!stack.isEmpty()) {
+        r += stack.get();
+        r += ' ';
+        stack.pop();
+    }
+
+    while (r[r.length() - 1] == ' ') {
+        r = r.substr(0, r.length()-1);
+    }
+
+    return r;
+}
+int eval(std::string pst) {
+    TStack<int> stack;
+    for (int i = 0; i < pst.length(); i++) {
+        if ((pst[i] >= '0') && (pst[i] <= '9')) {
+            stack.push(pst[i] - '0');
+        } else if (pst[i] != ' ') {
+            int second = stack.get();
+            stack.pop();
+            int first = stack.get();
+            stack.pop();
+
+            if (pst[i] == '-') {
+                stack.push(first - second);
+            } else if (pst[i] == '+') {
+                stack.push(first + second);
+            } else if (pst[i] == '*') {
+                stack.push(first * second);
+            } else {
+                stack.push(first / second);
+            }
+        }
+    }
+
+    return stack.get();
 }
 
-int eval(std::string pst) {
-    return 0;
-    TStack <int> stackCh2;
-    int i = 0, result = 0;
-    char ch = pst[i];
-    while (ch) {
-        if (ch >= '0' && ch <= '9') {
-            int insertInt = 0;
-            int dec = 1;
-            while (ch != ' ') {
-                insertInt += (ch - 48) * dec;
-                dec *= 10;
-                ch = pst[++i];
-            }
-            stackCh2.push(insertInt);
-        } else {
-            char operate = ch;
-            i++;
-            int num2 = stackCh2.get();
-            stackCh2.pop();
-            int num1 = stackCh2.get();
-            stackCh2.pop();
-            int result = calculating(operate, num1, num2);
-            stackCh2.push(result);
-        }
-        if (i < pst.size())
-            ch = pst[++i];
-        else
-            ch = 0;
-    }
-    result = stackCh2.get();
-    stackCh2.pop();
-    return result;
-}
